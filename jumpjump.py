@@ -20,7 +20,7 @@ character_x, character_y = SCREEN_WIDTH // 2, SCREEN_HEIGHT - character_height *
 character_speed = 10
 jump_height = 10
 is_jump = False
-gravity = 0.5  # 중력 가속도
+gravity = 10  # 중력 가속도
 
 # 발판 속성 설정
 platform_width, platform_height = 100, 20
