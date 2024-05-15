@@ -7,7 +7,7 @@ pygame.init()
 # 화면 크기 설정
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("키보드 움직임과 점프")
+pygame.display.set_caption("점프 점프")
 
 # 색깔 정의
 WHITE = (255, 255, 255)
