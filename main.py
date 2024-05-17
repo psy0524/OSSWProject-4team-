@@ -1,5 +1,7 @@
 import pygame
 import sys
+import importlib
+
 pygame.init()
 
 # 화면 크기 설정
@@ -11,24 +13,24 @@ pygame.display.set_caption("점프 점프")
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
-FLOOR_COLOR = (144, 228, 144)  
+FLOOR_COLOR = (144, 228, 144)
 
 # 캐릭터 속성 설정
 character_width, character_height = 50, 50
-character_x, character_y = SCREEN_WIDTH // 2, SCREEN_HEIGHT - character_height * 2
+character_x, character_y = 50, 50
 character_speed = 10
 jump_speed = 20
 gravity = 1
 
 # 바닥 속성 설정
-floor_height = 22  # 바닥 두께
-floor_y = SCREEN_HEIGHT - floor_height 
+floor_height = 22
+floor_y = SCREEN_HEIGHT - floor_height
 
 # 발판 속성 설정
 platform_width, platform_height = 100, 20
 platform_color = BLUE
 
-# 블록 좌표 설정 
+# 블록 좌표 설정
 blocks_positions = [
     (100, 500),
     (300, 400),
@@ -45,6 +47,19 @@ class Block:
 # 블록 리스트 초기화
 blocks = [Block(x, y) for x, y in blocks_positions]
 
+# 포탈 클래스 정의
+class Portal:
+    def __init__(self, x, y, width, height, target_stage):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.target_stage = target_stage
+
+# 포탈 리스트 초기화
+portal_width, portal_height = 40, 40
+portals = [
+    Portal(150, floor_y - portal_height - 10, portal_width, portal_height, 'stage1'),
+    Portal(700, 200, portal_width, portal_height, 'stage2')
+]
+
 clock = pygame.time.Clock()
 
 # 충돌 감지
@@ -52,6 +67,13 @@ def check_collision(character, blocks):
     for block in blocks:
         if character.colliderect(pygame.Rect(block.x, block.y, platform_width, platform_height)):
             return block
+    return None
+
+# 포탈 충돌 감지
+def check_portal_collision(character, portals):
+    for portal in portals:
+        if character.colliderect(portal.rect):
+            return portal
     return None
 
 # 게임 루프
@@ -107,9 +129,20 @@ while running:
     else:
         is_on_ground = False
 
+    # 포탈 충돌 검사 및 처리
+    portal_collided = check_portal_collision(character_rect, portals)
+    if portal_collided:
+        stage_module = importlib.import_module(portal_collided.target_stage)
+        stage_module.run_stage()
+        running = False
+
     # 발판 그리기
     for block in blocks:
         pygame.draw.rect(screen, platform_color, (block.x, block.y, platform_width, platform_height))
+
+    # 포탈 그리기
+    for portal in portals:
+        pygame.draw.rect(screen, (255, 0, 255), portal.rect)  # 포탈 색상은 보라색으로 설정
 
     # 캐릭터 생성
     pygame.draw.rect(screen, RED, character_rect)
