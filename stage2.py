@@ -146,7 +146,7 @@ while running:
     pygame.draw.rect(screen, RED, character_rect)
 
     pygame.display.update()
-    clock.tick(144)
+    clock.tick(60)
 
 pygame.quit()
 sys.exit()
