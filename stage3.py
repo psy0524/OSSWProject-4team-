@@ -56,9 +56,25 @@ class Portal:
 
 # 포탈 리스트 초기화
 portal_width, portal_height = 40, 40
-portals = Portal(629,  200 - portal_height - 10, portal_width, portal_height, 'stage3'),
+portals = Portal(629,  200 - portal_height - 10, portal_width, portal_height, 'stage4'),
 
 clock = pygame.time.Clock()
+
+# 가시 클래스 정의
+class Spike:
+    def __init__(self, x, y, width, height):
+        self.rect = pygame.Rect(x, y, width, height)
+
+# 가시 리스트 초기화
+spike_width, spike_height = 20, 20
+spikes_positions = [
+    (150, 450),
+    (350, 350),
+    (550, 250),
+]
+
+spikes = [Spike(x, y, spike_width, spike_height) for x, y in spikes_positions]
+
 
 # 충돌 감지
 def check_collision(character, blocks):
@@ -72,6 +88,13 @@ def check_portal_collision(character, portals):
     for portal in portals:
         if character.colliderect(portal.rect):
             return portal
+    return None
+
+# 가시 충돌 감지
+def check_spike_collision(character, spikes):
+    for spike in spikes:
+        if character.colliderect(spike.rect):
+            return spike
     return None
 
 # 게임 루프
@@ -134,6 +157,12 @@ while running:
         stage_module.run_stage()
         running = False
 
+    # 가시 충돌 검사 및 처리
+    spike_collided = check_spike_collision(character_rect, spikes)
+    if spike_collided:
+        print("Character hit a spike! Game over.")
+        running = False  # 혹은 캐릭터의 생명을 줄이는 등의 다른 처리
+
     # 발판 그리기
     for block in blocks:
         pygame.draw.rect(screen, platform_color, (block.x, block.y, platform_width, platform_height))
@@ -141,6 +170,10 @@ while running:
     # 포탈 그리기
     for portal in portals:
         pygame.draw.rect(screen, (255, 0, 255), portal.rect)  # 포탈 색상은 보라색으로 설정
+
+    # 가시 그리기
+    for spike in spikes:
+        pygame.draw.rect(screen, (0, 0, 0), spike.rect)  # 가시 색상은 검정색으로 설정
 
     # 캐릭터 생성
     pygame.draw.rect(screen, RED, character_rect)
