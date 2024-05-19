@@ -33,10 +33,14 @@ platform_color = BLUE
 
 # 블록 좌표 설정
 blocks_positions = [
-    (50, 100),
-    (200, 400),
+    (0, 300),
+    (100, 300),
+    (200, 300),
+    (300, 300),
+    (400, 300),
     (500, 300),
-    (600, 200)
+    (600, 300),
+    (700, 300)
 ]
 
 # 블록 클래스 정의
@@ -56,7 +60,7 @@ class Portal:
 
 # 포탈 리스트 초기화
 portal_width, portal_height = 40, 40
-portals = Portal(629,  200 - portal_height - 10, portal_width, portal_height, 'stage4'),
+portals = Portal(700,  275 - portal_height - 10, portal_width, portal_height, 'stage4'),
 
 clock = pygame.time.Clock()
 
@@ -68,9 +72,14 @@ class Spike:
 # 가시 리스트 초기화
 spike_width, spike_height = 20, 20
 spikes_positions = [
-    (150, 450),
-    (350, 350),
-    (550, 250),
+    (150, 250),
+    (225, 150),
+    (300, 250),
+    (375, 150),
+    (450, 250),
+    (525, 150),
+    (600, 250),
+    (675, 150)
 ]
 
 spikes = [Spike(x, y, spike_width, spike_height) for x, y in spikes_positions]
