@@ -18,7 +18,8 @@ FLOOR_COLOR = (144, 228, 144)
 
 # 캐릭터 속성 설정
 character_width, character_height = 50, 50
-character_x, character_y = 50, 50
+character_start_x, character_start_y = 50, 50
+character_x, character_y = character_start_x, character_start_y
 character_speed = 6
 jump_speed = 18
 gravity = 1
@@ -60,7 +61,7 @@ class Portal:
 
 # 포탈 리스트 초기화
 portal_width, portal_height = 40, 40
-portals = Portal(700,  275 - portal_height - 10, portal_width, portal_height, 'stage4'),
+portals = [Portal(700,  275 - portal_height - 10, portal_width, portal_height, 'stage4')]
 
 clock = pygame.time.Clock()
 
@@ -169,8 +170,10 @@ while running:
     # 가시 충돌 검사 및 처리
     spike_collided = check_spike_collision(character_rect, spikes)
     if spike_collided:
-        print("Character hit a spike! Game over.")
-        running = False  # 혹은 캐릭터의 생명을 줄이는 등의 다른 처리
+        print("Character hit a spike! Respawning...")
+        character_x, character_y = character_start_x, character_start_y
+        vertical_momentum = 0
+        is_on_ground = True
 
     # 발판 그리기
     for block in blocks:
