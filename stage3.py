@@ -21,7 +21,7 @@ character_width, character_height = 20, 20
 character_start_x, character_start_y = 50, 50
 character_x, character_y = character_start_x, character_start_y
 character_speed = 6
-jump_speed = 18
+jump_speed = 16
 gravity = 1
 
 # 바닥 속성 설정
