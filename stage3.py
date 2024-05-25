@@ -17,7 +17,7 @@ BLUE = (0, 0, 255)
 FLOOR_COLOR = (144, 228, 144)
 
 # 캐릭터 속성 설정
-character_width, character_height = 50, 50
+character_width, character_height = 20, 20
 character_start_x, character_start_y = 50, 50
 character_x, character_y = character_start_x, character_start_y
 character_speed = 6
