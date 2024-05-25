@@ -17,7 +17,8 @@ FLOOR_COLOR = (144, 228, 144)
 
 # 캐릭터 속성 설정
 character_width, character_height = 20, 20
-character_x, character_y = 50, 50
+initial_character_x, initial_character_y = 50, 500
+character_x, character_y = initial_character_x, initial_character_y
 character_speed = 6
 jump_speed = 16
 gravity = 1
@@ -29,6 +30,7 @@ floor_y = SCREEN_HEIGHT - floor_height
 # 발판 속성 설정
 platform_width, platform_height = 100, 20
 platform_color = BLUE
+
 
 # 블록 클래스 정의
 class Block:
@@ -53,10 +55,12 @@ class MovingBlock(Block):
             self.direction *= -1
 # 블록 리스트 초기화
 blocks = [
-    Block(100, 500),
-    MovingBlock(300, 400, move_range=200, speed=2),
-    Block(500, 300),
-    MovingBlock(700, 200, move_range=150, speed=3)
+    Block(0, 550),
+    MovingBlock(400, 525, move_range=200, speed=2),
+    Block(700, 425),
+    MovingBlock(400, 300, move_range=200, speed=3),
+    Block(0, 200),
+    MovingBlock(400, 100, move_range=200, speed=4)
 ]
 
 # 포탈 클래스 정의
@@ -67,9 +71,18 @@ class Portal:
 
 # 포탈 리스트 초기화
 portal_width, portal_height = 40, 40
-portals = Portal(745, 150, portal_width, portal_height, 'stage2'),
+portals = Portal(745, 50, portal_width, portal_height, 'stage5'),
 
 clock = pygame.time.Clock()
+
+# 가시 클래스 정의
+class Spike:
+    def __init__(self, x, y, width, height):
+        self.rect = pygame.Rect(x, y, width, height)
+
+spike_width, spike_height = 20, 20
+
+spikes = []
 
 # 충돌 감지
 def check_collision(character, blocks):
@@ -83,6 +96,20 @@ def check_portal_collision(character, portals):
     for portal in portals:
         if character.colliderect(portal.rect):
             return portal
+    return None
+
+# 바닥과 충돌시 초기 위치로
+def reset_game():
+    global character_x, character_y, vertical_momentum, is_on_ground
+    character_x, character_y = initial_character_x, initial_character_y
+    vertical_momentum = 0
+    is_on_ground = True
+
+# 가시 충돌 감지
+def check_spike_collision(character, spikes):
+    for spike in spikes:
+        if character.colliderect(spike.rect):
+            return spike
     return None
 
 # 게임 루프
@@ -121,9 +148,6 @@ while running:
     character_y += vertical_momentum
     character_y = min(character_y, floor_y - character_height)
 
-    # 바닥 그리기
-    pygame.draw.rect(screen, FLOOR_COLOR, (0, floor_y, SCREEN_WIDTH, floor_height))
-
     # 충돌 검사 및 처리
     block_collided = check_collision(character_rect, blocks)
     if block_collided:
@@ -145,6 +169,18 @@ while running:
         stage_module.run_stage()
         running = False
     
+    # 가시 충돌 검사 및 처리
+    spike_collided = check_spike_collision(character_rect, spikes)
+    if spike_collided:
+        print("Character hit a spike! Respawning...")
+        character_x, character_y = initial_character_x, initial_character_y
+        vertical_momentum = 0
+        is_on_ground = True
+    
+    # 바닥과 충돌하면 게임 리셋
+    if character_y >= floor_y - character_height:
+        reset_game()
+    
     # 발판 그리기, 움직임 구현
     for block in blocks:
         block.move()
@@ -154,6 +190,10 @@ while running:
     # 포탈 그리기
     for portal in portals:
         pygame.draw.rect(screen, (255, 0, 255), portal.rect)  # 포탈 색상은 보라색으로 설정
+
+    # 가시 그리기
+    for spike in spikes:
+        pygame.draw.rect(screen, (0, 0, 0), spike.rect)  # 가시 색상은 검정색으로 설정
 
     # 캐릭터 생성
     pygame.draw.rect(screen, RED, character_rect)

@@ -18,8 +18,8 @@ FLOOR_COLOR = (144, 228, 144)
 
 # 캐릭터 속성 설정
 character_width, character_height = 20, 20
-character_start_x, character_start_y = 50, 50
-character_x, character_y = character_start_x, character_start_y
+initial_character_x, initial_character_y = 50, 50
+character_x, character_y = initial_character_x, initial_character_y
 character_speed = 6
 jump_speed = 16
 gravity = 1
@@ -70,20 +70,19 @@ class Spike:
     def __init__(self, x, y, width, height):
         self.rect = pygame.Rect(x, y, width, height)
 
-# 가시 리스트 초기화
 spike_width, spike_height = 20, 20
-spikes_positions = [
-    (150, 250),
-    (225, 150),
-    (300, 250),
-    (375, 150),
-    (450, 250),
-    (525, 150),
-    (600, 250),
-    (675, 150)
-]
 
-spikes = [Spike(x, y, spike_width, spike_height) for x, y in spikes_positions]
+
+spikes = [
+    Spike(150, 250, spike_width, spike_height),
+    Spike(225, 150, spike_width, spike_height),
+    Spike(300, 250, spike_width, spike_height),
+    Spike(375, 150, spike_width, spike_height),
+    Spike(450, 250, spike_width, spike_height),
+    Spike(525, 150, spike_width, spike_height),
+    Spike(600, 250, spike_width, spike_height),
+    Spike(675, 150, spike_width, spike_height)
+    ]
 
 
 # 충돌 감지
@@ -171,7 +170,7 @@ while running:
     spike_collided = check_spike_collision(character_rect, spikes)
     if spike_collided:
         print("Character hit a spike! Respawning...")
-        character_x, character_y = character_start_x, character_start_y
+        character_x, character_y = initial_character_x, initial_character_y
         vertical_momentum = 0
         is_on_ground = True
 

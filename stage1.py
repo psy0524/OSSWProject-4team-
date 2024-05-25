@@ -30,14 +30,6 @@ floor_y = SCREEN_HEIGHT - floor_height
 platform_width, platform_height = 100, 20
 platform_color = BLUE
 
-# 블록 좌표 설정
-blocks_positions = [
-    (100, 500),
-    (300, 400),
-    (500, 300),
-    (700, 200)
-]
-
 # 블록 클래스 정의
 class Block:
     def __init__(self, x, y):
@@ -58,7 +50,12 @@ class MovingBlock(Block):
         if self.x > self.initial_x + self.move_range or self.x < self.initial_x - self.move_range:
             self.direction *= -1
 # 블록 리스트 초기화
-blocks = [Block(x, y) for x, y in blocks_positions]
+blocks = [  
+    Block(100, 500),
+    Block(300, 400),
+    Block(500, 300),
+    Block(700, 200)
+    ]
 
 # 포탈 클래스 정의
 class Portal:
